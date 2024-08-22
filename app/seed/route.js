@@ -1,8 +1,8 @@
-import bcrypt from 'bcrypt';
+ import bcrypt from 'bcrypt';
  import { db } from '@vercel/postgres';
  import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 
-const client = await db.connect();
+ const client = await db.connect();
 
 async function seedUsers() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -102,6 +102,7 @@ async function seedRevenue() {
 }
 
 export async function GET() {
+  
   try {
      await client.sql`BEGIN`;
      await seedUsers();
@@ -109,6 +110,7 @@ export async function GET() {
      await seedInvoices();
      await seedRevenue();
      await client.sql`COMMIT`;
+
      return new Response(JSON.stringify({ message: 'Database seeded successfully' }), { status: 200 });
    } catch (error) {
      await client.sql`ROLLBACK`;
